@@ -8,3 +8,4 @@ joblib
 pytesseract
 gdown
 gunicorn
+scikit-learn
