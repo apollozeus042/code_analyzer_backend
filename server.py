@@ -20,9 +20,9 @@ app = Flask(__name__)
 CORS(app)
 port = "5000"
 MODEL_URLS = {
-    "readability_model": "1aBcD3FgH",  # Replace with actual file ID
-    "buglocal_model": "2XyZ9EfLmN",    # Replace with actual file ID
-    "label_encoder": "3QrStUvWxy",      # Replace with actual file ID
+    "readability_model": "1Ut7HmyMhkG-i1vijBjIYXypkpBeLjtaN",
+    "buglocal_model": "1BCY1OpLT8qktRyoNoIiQI37ydfmVqV8I",   
+    "label_encoder": "1o2aK7ZPIhp0_fUkSpWOmGPRntiryJzWB",  
 }
 
 MODEL_DIR = "models"
