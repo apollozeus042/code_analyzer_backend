@@ -13,18 +13,47 @@ from keras.models import load_model
 import numpy as np
 from sklearn.preprocessing import LabelEncoder
 import joblib
+import gdown
+import os
 
 app = Flask(__name__)
 CORS(app)
 port = "5000"
-# Set the path to Tesseract (Windows only)
-# Uncomment the line below and update the path if needed
-pytesseract.pytesseract.tesseract_cmd = r"C:/Program Files/Tesseract-OCR/tesseract.exe"
+MODEL_URLS = {
+    "readability_model": "1aBcD3FgH",  # Replace with actual file ID
+    "buglocal_model": "2XyZ9EfLmN",    # Replace with actual file ID
+    "label_encoder": "3QrStUvWxy",      # Replace with actual file ID
+}
+
+MODEL_DIR = "models"
+os.makedirs(MODEL_DIR, exist_ok=True)
+
+def download_file(file_id, output_path):
+    """Download a file from Google Drive if it's missing."""
+    if not os.path.exists(output_path):
+        print(f"Downloading {output_path} from Google Drive...")
+        url = f"https://drive.google.com/drive/folders/1jDrqOFK9XVnkFjL7zyDQWeQJy64nZgtY"
+        gdown.download(url, output_path, quiet=False)
+
+readability_model_path = os.path.join(MODEL_DIR, "readability_model.keras")
+buglocal_model_path = os.path.join(MODEL_DIR, "buglocalize_model.keras")
+label_encoder_path = os.path.join(MODEL_DIR, "label_encoder.joblib")
+
+# Download models if missing
+download_file(MODEL_URLS["readability_model"], readability_model_path)
+download_file(MODEL_URLS["buglocal_model"], buglocal_model_path)
+download_file(MODEL_URLS["label_encoder"], label_encoder_path)
+
 
 custom_objects = {'LeakyReLU': LeakyReLU}
-readability_model= load_model("D:/Documents/Schoo/School Activities/4th Year/Intelligent Sytems/code_analyzer/src/backend/models/readability_model.keras", custom_objects=custom_objects)
-buglocal_model=load_model("D:/Documents/Schoo/School Activities/4th Year/Intelligent Sytems/code_analyzer/src/backend/models/buglocalize_model.keras")
-label_encoder= joblib.load('D:/Documents/Schoo/School Activities/4th Year/Intelligent Sytems/code_analyzer/src/backend/models/label_encoder.joblib')
+try:
+    readability_model = load_model(readability_model_path, custom_objects=custom_objects)
+    buglocal_model = load_model(buglocal_model_path)
+    label_encoder = joblib.load(label_encoder_path)
+    print("Models loaded successfully!")
+except Exception as e:
+    print(f"Error loading models: {e}")
+    readability_model, buglocal_model, label_encoder = None, None, None
 
 char_vocab = {char: idx for idx, char in enumerate(string.ascii_letters + string.digits + string.punctuation + " ", start=1)}
 def char_to_int(code):
