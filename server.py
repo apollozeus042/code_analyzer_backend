@@ -32,7 +32,7 @@ def download_file(file_id, output_path):
     """Download a file from Google Drive if it's missing."""
     if not os.path.exists(output_path):
         print(f"Downloading {output_path} from Google Drive...")
-        url = f"https://drive.google.com/drive/folders/1jDrqOFK9XVnkFjL7zyDQWeQJy64nZgtY"
+        url = f"https://drive.google.com/uc?id={file_id}"
         gdown.download(url, output_path, quiet=False)
 
 readability_model_path = os.path.join(MODEL_DIR, "readability_model.keras")
