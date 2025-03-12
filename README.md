@@ -1,6 +1,6 @@
-# **Code Analyzer - Flask Backend**
+# **Code Analyzer**
 
-A **Flask-based API** for analyzing code readability and detecting bugs using **Tesseract OCR and TensorFlow models**.
+A **Web Application** for analyzing code readability and detecting bugs using **Tesseract OCR and CNN models**.
 
 ---
 
@@ -71,7 +71,7 @@ Once the backend is running, open the frontend web app:
   python -m pip install --upgrade pip
   ```
 - If the server doesn't start, ensure you're using the correct Python version (`py -3.11`).
-- For other concerns, try contacting the developer: Apollo Zeus Espinosa
+- For other concerns, try contacting the developers: Apollo Zeus Espinosa or Rafael Ogot
 ---
 
 ## 🎯 **Summary**
