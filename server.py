@@ -180,4 +180,5 @@ def analyze_code():
 
 
 if __name__ == "__main__":
+    print("WEB APPLICATION IS CONNECTED TO SERVER") 
     app.run(debug=True)
