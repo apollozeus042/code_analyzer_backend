@@ -1,0 +1,12 @@
+Flask
+flask-cors
+tensorflow
+keras
+pillow
+pandas
+numpy
+joblib
+pytesseract
+gdown
+gunicorn
+scikit-learn
