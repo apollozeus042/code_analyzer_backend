@@ -49,6 +49,7 @@ Start the Flask API by running:
 py -3.11 server.py
 ```
 ✅ This will launch the server, and logs will appear in the terminal.
+✅ You will see a "WEB APPLICATION IS CONNECTED TO SERVER" message in the terminal if successful.
 
 ---
 
