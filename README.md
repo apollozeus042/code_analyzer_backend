@@ -21,7 +21,7 @@ If Python is not installed or you have a higher version, download **Python 3.12 
    🔗 [Tesseract OCR Installer (UB-Mannheim Github wiki)](https://github.com/UB-Mannheim/tesseract/wiki)  
 2. **Update Tesseract Path** (if needed) in `server.py` (Line 22):  
    ```python
-   pytesseract.pytesseract.tesseract_cmd = r"C:/Program Files/Tesseract-OCR/tesseract.exe"
+   pytesseract.pytesseract.tesseract_cmd = r"{path-to-tesseract}/tesseract.exe"
    ```
 
 ---
