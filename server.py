@@ -13,12 +13,14 @@ from keras.models import load_model
 import numpy as np
 from sklearn.preprocessing import LabelEncoder
 import joblib
-import gdown
 import os
+import gdown
 
 app = Flask(__name__)
 CORS(app)
 port = "5000"
+pytesseract.pytesseract.tesseract_cmd = r"C:/Program Files/Tesseract-OCR/tesseract.exe" ##Change Directory to where you installed Tesseract
+
 MODEL_URLS = {
     "readability_model": "1Ut7HmyMhkG-i1vijBjIYXypkpBeLjtaN",
     "buglocal_model": "1BCY1OpLT8qktRyoNoIiQI37ydfmVqV8I",   
@@ -57,7 +59,7 @@ except Exception as e:
 
 char_vocab = {char: idx for idx, char in enumerate(string.ascii_letters + string.digits + string.punctuation + " ", start=1)}
 def char_to_int(code):
-    return [char_vocab.get(char, 0) for char in code]  # 0 for unknown characters
+    return [char_vocab.get(char, 0) for char in code]
 
 token_vocab = {}
 def tokenize_code(code):
@@ -67,13 +69,13 @@ def tokenize_code(code):
         for token in tokenize.tokenize(code_bytes.readline):
             token_str = token.string
             if token_str not in token_vocab:
-                token_vocab[token_str] = len(token_vocab) + 1  # Assign a new index
+                token_vocab[token_str] = len(token_vocab) + 1
             tokens.append(token_vocab[token_str])
     except:
-        tokens.append(0)  # Handle errors
+        tokens.append(0)
     return tokens
 
-ast_vocab = {}  # Will be filled dynamically
+ast_vocab = {}
 def ast_nodes(code):
     try:
         tree = ast.parse(code)
@@ -81,7 +83,7 @@ def ast_nodes(code):
         node_indices = []
         for node in nodes:
             if node not in ast_vocab:
-                ast_vocab[node] = len(ast_vocab) + 1  # Assign a new index
+                ast_vocab[node] = len(ast_vocab) + 1
             node_indices.append(ast_vocab[node])
         return node_indices
     except:
@@ -109,20 +111,16 @@ def bug_localization(extracted_text):
     new_data = {'python_solutions': [extracted_text]}
     new_df = pd.DataFrame(new_data)
 
-    # 2. Preprocess the code snippet (same as before)
     new_df["char_representation"] = new_df["python_solutions"].apply(char_to_int)
     new_df["token_representation"] = new_df["python_solutions"].apply(tokenize_code)
 
-    # 3. Prepare data for the model (same as before)
     X_char_new = pad_sequences(new_df["char_representation"], maxlen=1024)
     X_token_new = pad_sequences(new_df["token_representation"], maxlen=361)
 
-    # 4. Make the prediction
     prediction = buglocal_model.predict([X_char_new, X_token_new])
     predicted_class = np.argmax(prediction)
     predicted_error = label_encoder.inverse_transform([predicted_class])
-
-    # 5. Print the prediction
+ 
     print("Predicted Error Type:", predicted_error[0])
     predicted_error = map_predicted_error(predicted_error[0])
     return predicted_error
@@ -151,13 +149,10 @@ def map_predicted_error(predicted_error):
         "1": "Unknown Error",
     }
 
-    # If predicted_error is a list or array, extract the first element
     if isinstance(predicted_error, (list, np.ndarray)):
         predicted_error = predicted_error[0]  
 
-    # Perform dictionary lookup
     mapped_label = error_map.get(predicted_error, "Unknown Error")
-    print("Predicted Error Type:", mapped_label)  # Debugging output
     return mapped_label
 
 
